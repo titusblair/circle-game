@@ -1,0 +1,25 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="assets/styles/main.css">
+
+</head>
+<body>
+
+<canvas></canvas>
+
+<script src='http://code.jquery.com/jquery-latest.min.js'></script>
+<script type='text/javascript'>
+  $(document).ready(function() {
+    if(isCanvasSupported())
+      cg.init()
+    else
+      $(document.body).html("<style type='text/css'>p {text-align: center} body {padding: 10px}</style><p>You browser does not support HTML5, which is required to run this game.</p><p>I recommend Google Chrome <br /><a href='http://www.google.com/chrome'><img src='http://www.onlinecomputerfixes.com/wp-content/uploads/2010/10/google-chrome-logo.jpg' /></a></p>")
+  })
+ </script>
+<script src="https://s3-us-west-1.amazonaws.com/dolbydeveloper/1.1.0/js/dolby.min.js"></script>
+<script src='assets/scripts/etc.js'></script>
+<script src="assets/scripts/circle-game.js"></script>
+
+</body>
+</html>
