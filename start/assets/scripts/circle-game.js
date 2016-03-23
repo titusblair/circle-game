@@ -25,6 +25,12 @@ var cg = {
    circles: [],
    death: function() {
 
+     // Play die sound
+     ///SoundMixer.play( SoundMixer.dieSound );
+     
+     // Reset background music tempo
+     ///SoundMixer.backgroundSound.playbackRate = 1
+
      pts = cg.player.radius
      this.stop()
      this.dispText = function() {
@@ -54,6 +60,12 @@ var cg = {
      this.player = false
    },
    start: function() {
+
+     // Play start sound
+     ///SoundMixer.play( SoundMixer.startSound )
+
+     // Play background sound
+     ///SoundMixer.play( SoundMixer.backgroundSound )
 
      cg.dispText = function() {}
      $(cg.canvas).unbind('click')
@@ -109,8 +121,10 @@ var cg = {
    },
    togglePause: function() {
      if(this.paused) {
+       ///SoundMixer.play( SoundMixer.backgroundSound )
        this.unpause()
      } else {
+       ///SoundMixer.pause( SoundMixer.backgroundSound )
        this.pause()
       }
    },
@@ -118,9 +132,6 @@ var cg = {
    init: function() {
 
      cg.autosize()
-
-     this.dolbyLogo = new Image()
-     this.dolbyLogo.src = 'assets/images/DolbyLogo.png'
 
      this.canvas = $('canvas')
      this.canvas.attr({width: this.config.width, height: this.config.height})
@@ -149,6 +160,9 @@ var cg = {
          cg.start()
        }
      })
+
+     // initiate sounds
+     ///SoundMixer.init()
      
      this.tick()
    },
@@ -234,6 +248,52 @@ var cg = {
    }
 
  }
+
+ /*var SoundMixer = {
+
+    extension: '.mp3',
+
+    ddPlus: Dolby.checkDDPlus(),
+    soundPath: 'assets/sounds/',
+
+    init: function() {
+      
+      if( this.ddPlus === true ){
+        
+        this.extension = '_Dolby.mp4';
+
+        this.dolbyLogo = new Image()
+        this.dolbyLogo.src = 'assets/images/DolbyLogo.png'
+        cg.ctx.drawImage(this.dolbyLogo, (cg.config.width / 2 ) + 120 , ( cg.config.height / 2 ) + 300 , 50, 50)
+
+      }
+
+     this.backgroundSound = new Audio()
+     this.backgroundSound.src = this.soundPath + 'RedStreams-jukedeck' + this.extension
+     this.backgroundSound.playbackRate = 1
+     this.backgroundSound.loop = true
+
+     this.dieSound = new Audio()
+     this.dieSound.src = this.soundPath + 'dieSound' + this.extension
+
+     this.chompSound = new Audio()
+     this.chompSound.src = this.soundPath + 'chompSound' + this.extension
+     this.chompSound.playbackRate = 4
+
+     this.startSound = new Audio()
+     this.startSound.src = this.soundPath + 'startSound' + this.extension
+     this.startSound.playbackRate = 1.25
+
+    },
+    play: function( sound ) {
+      sound.currentTime = 0;       
+      sound.play();
+    },
+    pause: function( sound ){
+      sound.pause();
+    }
+
+ }*/
 
  var Circle = function(inCenter) {
    min = cg.config.circle.minRadius
@@ -340,6 +400,12 @@ var cg = {
            cg.death()
            break
          } else {
+           
+           // Play chomp sound when eating circle
+           ///SoundMixer.play( SoundMixer.chompSound );
+           // Change background temp to add more excitement as more circles are chomped           
+           ///SoundMixer.backgroundSound.playbackRate += 0.025;
+
            this.radius++
            cg.circles.splice(i,1)
            i--

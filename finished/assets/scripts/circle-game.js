@@ -25,11 +25,10 @@ var cg = {
    circles: [],
    death: function() {
 
-     // play die sound
+     // Play die sound
      SoundMixer.play( SoundMixer.dieSound );
      
-     // stop and reset background music tempo
-     SoundMixer.reset( SoundMixer.backgroundSound )
+     // Reset background music tempo
      SoundMixer.backgroundSound.playbackRate = 1
 
      pts = cg.player.radius
@@ -66,7 +65,6 @@ var cg = {
      SoundMixer.play( SoundMixer.startSound )
 
      // play background sound
-     SoundMixer.reset( SoundMixer.backgroundSound )
      SoundMixer.play( SoundMixer.backgroundSound )
 
      cg.dispText = function() {}
@@ -273,33 +271,26 @@ var cg = {
      this.backgroundSound = new Audio()
      this.backgroundSound.src = this.soundPath + 'RedStreams-jukedeck' + this.extension
      this.backgroundSound.playbackRate = 1
-     this.backgroundSound.preload = 'auto'
      this.backgroundSound.loop = true
 
      this.dieSound = new Audio()
      this.dieSound.src = this.soundPath + 'dieSound' + this.extension
-     this.dieSound.preload = 'auto'
 
      this.chompSound = new Audio()
      this.chompSound.src = this.soundPath + 'chompSound' + this.extension
      this.chompSound.playbackRate = 4
-     this.chompSound.preload = 'auto'
 
      this.startSound = new Audio()
      this.startSound.src = this.soundPath + 'startSound' + this.extension
      this.startSound.playbackRate = 1.25
-     this.startSound.preload = 'auto'
 
     },
     play: function( sound ) {
+      sound.currentTime = 0;       
       sound.play();
     },
     pause: function( sound ){
       sound.pause();
-    },
-    reset: function( sound ){
-      sound.pause();
-      sound.currentTime = 0;      
     }
 
  }
@@ -409,8 +400,10 @@ var cg = {
            cg.death()
            break
          } else {
-           SoundMixer.reset( SoundMixer.chompSound );
+
+           // Play chomp sound when eating circle          
            SoundMixer.play( SoundMixer.chompSound );
+           // Change background temp to add more excitement as more circles are chomped
            SoundMixer.backgroundSound.playbackRate += 0.025;
 
            this.radius++
@@ -426,10 +419,5 @@ var cg = {
      cg.ctx.fillStyle = '#fff'
      cg.ctx.closePath()
      cg.ctx.fill()
-
- /*    cg.ctx.font = this.radius + 'pt Verdana'
-     cg.ctx.fillStyle = 'black'
-     w = cg.ctx.measureText(t = this.radius).width
-     cg.ctx.fillText(t, this.x - w / 2, this.y + this.radius  / 2)*/
    }
  }
