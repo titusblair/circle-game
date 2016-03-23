@@ -63,7 +63,7 @@ var cg = {
    start: function() {
 
      // play start sound
-     SoundMixer.reset( SoundMixer.startSound )
+     SoundMixer.play( SoundMixer.startSound )
 
      // play background sound
      SoundMixer.reset( SoundMixer.backgroundSound )
@@ -272,19 +272,23 @@ var cg = {
 
      this.backgroundSound = new Audio()
      this.backgroundSound.src = this.soundPath + 'RedStreams-jukedeck' + this.extension
-     this.backgroundSound.playbackRate = 1;
-     this.backgroundSound.loop = true;
+     this.backgroundSound.playbackRate = 1
+     this.backgroundSound.preload = 'auto'
+     this.backgroundSound.loop = true
 
      this.dieSound = new Audio()
      this.dieSound.src = this.soundPath + 'dieSound' + this.extension
+     this.dieSound.preload = 'auto'
 
      this.chompSound = new Audio()
      this.chompSound.src = this.soundPath + 'chompSound' + this.extension
-     this.chompSound.playbackRate = 4;
+     this.chompSound.playbackRate = 4
+     this.chompSound.preload = 'auto'
 
      this.startSound = new Audio()
      this.startSound.src = this.soundPath + 'startSound' + this.extension
-     this.startSound.playbackRate = 1.25;
+     this.startSound.playbackRate = 1.25
+     this.startSound.preload = 'auto'
 
     },
     play: function( sound ) {
