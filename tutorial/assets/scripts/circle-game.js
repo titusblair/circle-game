@@ -57,7 +57,7 @@ var cg = {
      })
 
      // Initialize the SoundMixer Object
-     //SoundMixer.init()
+     SoundMixer.init()
      
      this.tick()
    },
@@ -67,12 +67,12 @@ var cg = {
      // Call play on the SoundMixer object and pass it the startSound to play
      //
      // Play start sound
-     //SoundMixer.play( SoundMixer.startSound )
+     SoundMixer.play( SoundMixer.startSound )
 
      // Call play on the SoundMixer object and pass it the backgroundSound to play
      //
      // Play background sound
-     //SoundMixer.play( SoundMixer.backgroundSound )
+     SoundMixer.play( SoundMixer.backgroundSound )
 
      cg.dispText = function() {}
      $(cg.canvas).unbind('click')
@@ -99,12 +99,12 @@ var cg = {
      // Call play on the SoundMixer object and pass it the dieSound to play
      //
      // Play die sound
-     //SoundMixer.play( SoundMixer.dieSound );
+     SoundMixer.play( SoundMixer.dieSound );
      
      // Change the playback rate back to 1 so the sound back to normal beat/tempo
      //
      // Reset background music tempo
-     //SoundMixer.backgroundSound.playbackRate = 1
+     SoundMixer.backgroundSound.playbackRate = 1
 
      pts = cg.player.radius
      this.stop()
@@ -153,7 +153,7 @@ var cg = {
        this.paused = true
        
        // Pause the backgroundSound
-       //SoundMixer.pause( SoundMixer.backgroundSound )
+       SoundMixer.pause( SoundMixer.backgroundSound )
 
      }
    },
@@ -163,10 +163,8 @@ var cg = {
        cg.dispText = function() {}
        cg.hideCursor()
        this.paused = false
-
        // Play the backgroundSound
-       //SoundMixer.play( SoundMixer.backgroundSound )       
-     
+       SoundMixer.play( SoundMixer.backgroundSound )       
      }
    },
 
@@ -275,137 +273,9 @@ var cg = {
      this.ctx.drawImage(this.z, this.zLogoX = (cg.config.width - this.zWidth) / 2, this.zLogoY = cg.config.height / 2 + 200) //296x81
    }
 
-}
+ }
 
-var Circle = function(inCenter) {
-  min = cg.config.circle.minRadius
-  max = cg.config.circle.maxRadius
-
-  if(typeof(cg.player) != 'undefined' && cg.player) {
-   if(min < cg.player.radius - 35)
-     min = cg.player.radius - 35
-   if(max < cg.player.radius + 15)
-     max = cg.player.radius + 15
-  }
-  this.radius = rand(min,max,cg.config.circle.radiusInterval)
-  this.color = cg.config.circle.colors[Math.floor(Math.random() * cg.config.circle.colors.length)]
-
-  if(inCenter) {
-   this.x = Math.random() * cg.config.width
-   this.y = Math.random() * cg.config.height
-   this.vx = Math.random() - .5
-   this.vy = Math.random() - .5
-  } else {
-   r = Math.random()
-   if(r <= .25) {
-     this.x = 1 - this.radius
-     this.y = Math.random() * cg.config.height
-     this.vx = Math.random()
-     this.vy = Math.random() - .5
-   } else if(r > .25 && r <= .5) {
-     this.x = cg.config.width + this.radius - 1
-     this.y = Math.random() * cg.config.height
-     this.vx = - Math.random()
-     this.vy = Math.random() - .5
-   } else if(r > .5 && r <= .75) {
-     this.x = Math.random() * cg.config.height
-     this.y = 1 - this.radius
-     this.vx = Math.random() - .5
-     this.vy = Math.random()
-   } else {
-     this.x = Math.random() * cg.config.height
-     this.y = cg.config.height + this.radius - 1
-     this.vx = Math.random() - .5
-     this.vy = - Math.random()
-   }
-  }
-  this.vx *= cg.config.circle.speedScale
-  this.vy *= cg.config.circle.speedScale
-  if(Math.abs(this.vx) + Math.abs(this.vy) < 1) {
-   this.vx = this.vx < 0 ? -1 : 1
-   this.vy = this.vy < 0 ? -1 : 1
-  }
-
-  this.tick = function() {
-   if(!this.inBounds()) {
-     for(var i = 0; i < cg.circles.length; i++)
-       if(cg.circles[i].x == this.x && cg.circles[i].y == this.y) {
-         cg.circles.splice(i,1)
-         return true
-       }
-   } else {
-     this.move()
-     this.render()
-   }
-  }
-
-  this.inBounds = function() {
-   if(this.x + this.radius < 0 ||
-      this.x - this.radius > cg.config.width ||
-      this.y + this.radius < 0 ||
-      this.y - this.radius > cg.config.height)
-     return false
-   else
-     return true
-  }
-
-  this.move = function() {
-   this.x += this.vx * elapsed / 15
-   this.y += this.vy * elapsed / 15
-  }
-
-  this.render = function() {
-   cg.ctx.beginPath()
-   cg.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,false)
-   cg.ctx.fillStyle = this.color
-   cg.ctx.closePath()
-   cg.ctx.fill()
-  }
-
-  this.render()
-}
-
-var Player = function() {
-  this.x = cg.config.width / 2
-  this.y = cg.config.height / 2
-  this.color = 'white'
-  this.radius = cg.config.circle.playerRadius
-  this.tick = function() {
-   this.detectCollision()
-   this.render()
-  }
-  this.detectCollision = function() {
-   for(var i = 0; i < cg.circles.length; i++) {
-     circle = cg.circles[i]
-     dist = Math.pow(Math.pow(circle.x - this.x,2) + Math.pow(circle.y - this.y,2),.5)
-     if(dist < circle.radius + this.radius) {
-       if(circle.radius > this.radius) {
-         cg.death()
-         break
-       } else {
-         
-         // Play chomp sound when eating circle
-         //SoundMixer.reset( SoundMixer.chompSound );
-         // Change background temp to add more excitement as more circles are chomped           
-         //SoundMixer.backgroundSound.playbackRate += 0.025;
-
-         this.radius++
-         cg.circles.splice(i,1)
-         i--
-       }
-     }
-   }
-  }
-  this.render = function() {
-   cg.ctx.beginPath()
-   cg.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,false)
-   cg.ctx.fillStyle = '#fff'
-   cg.ctx.closePath()
-   cg.ctx.fill()
-  }
-}
-
- /*var SoundMixer = {
+ var SoundMixer = {
 
     extension: '.mp3',
 
@@ -452,4 +322,131 @@ var Player = function() {
       this.play( sound );
     }
 
- }*/
+ }
+
+ var Circle = function(inCenter) {
+   min = cg.config.circle.minRadius
+   max = cg.config.circle.maxRadius
+
+   if(typeof(cg.player) != 'undefined' && cg.player) {
+     if(min < cg.player.radius - 35)
+       min = cg.player.radius - 35
+     if(max < cg.player.radius + 15)
+       max = cg.player.radius + 15
+   }
+   this.radius = rand(min,max,cg.config.circle.radiusInterval)
+   this.color = cg.config.circle.colors[Math.floor(Math.random() * cg.config.circle.colors.length)]
+
+   if(inCenter) {
+     this.x = Math.random() * cg.config.width
+     this.y = Math.random() * cg.config.height
+     this.vx = Math.random() - .5
+     this.vy = Math.random() - .5
+   } else {
+     r = Math.random()
+     if(r <= .25) {
+       this.x = 1 - this.radius
+       this.y = Math.random() * cg.config.height
+       this.vx = Math.random()
+       this.vy = Math.random() - .5
+     } else if(r > .25 && r <= .5) {
+       this.x = cg.config.width + this.radius - 1
+       this.y = Math.random() * cg.config.height
+       this.vx = - Math.random()
+       this.vy = Math.random() - .5
+     } else if(r > .5 && r <= .75) {
+       this.x = Math.random() * cg.config.height
+       this.y = 1 - this.radius
+       this.vx = Math.random() - .5
+       this.vy = Math.random()
+     } else {
+       this.x = Math.random() * cg.config.height
+       this.y = cg.config.height + this.radius - 1
+       this.vx = Math.random() - .5
+       this.vy = - Math.random()
+     }
+   }
+   this.vx *= cg.config.circle.speedScale
+   this.vy *= cg.config.circle.speedScale
+   if(Math.abs(this.vx) + Math.abs(this.vy) < 1) {
+     this.vx = this.vx < 0 ? -1 : 1
+     this.vy = this.vy < 0 ? -1 : 1
+   }
+
+   this.tick = function() {
+     if(!this.inBounds()) {
+       for(var i = 0; i < cg.circles.length; i++)
+         if(cg.circles[i].x == this.x && cg.circles[i].y == this.y) {
+           cg.circles.splice(i,1)
+           return true
+         }
+     } else {
+       this.move()
+       this.render()
+     }
+   }
+
+   this.inBounds = function() {
+     if(this.x + this.radius < 0 ||
+        this.x - this.radius > cg.config.width ||
+        this.y + this.radius < 0 ||
+        this.y - this.radius > cg.config.height)
+       return false
+     else
+       return true
+   }
+
+   this.move = function() {
+     this.x += this.vx * elapsed / 15
+     this.y += this.vy * elapsed / 15
+   }
+
+   this.render = function() {
+     cg.ctx.beginPath()
+     cg.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,false)
+     cg.ctx.fillStyle = this.color
+     cg.ctx.closePath()
+     cg.ctx.fill()
+   }
+
+   this.render()
+ }
+ var Player = function() {
+   this.x = cg.config.width / 2
+   this.y = cg.config.height / 2
+   this.color = 'white'
+   this.radius = cg.config.circle.playerRadius
+   this.tick = function() {
+     this.detectCollision()
+     this.render()
+   }
+   this.detectCollision = function() {
+     for(var i = 0; i < cg.circles.length; i++) {
+       circle = cg.circles[i]
+       dist = Math.pow(Math.pow(circle.x - this.x,2) + Math.pow(circle.y - this.y,2),.5)
+       if(dist < circle.radius + this.radius) {
+         if(circle.radius > this.radius) {
+           cg.death()
+           break
+         } else {
+           
+           // Play chomp sound when eating circle
+           SoundMixer.reset( SoundMixer.chompSound );
+           // Change background temp to add more excitement as more circles are chomped           
+           SoundMixer.backgroundSound.playbackRate += 0.025;
+
+           this.radius++
+           cg.circles.splice(i,1)
+           i--
+         }
+       }
+     }
+   }
+   this.render = function() {
+     cg.ctx.beginPath()
+     cg.ctx.arc(this.x,this.y,this.radius,0,Math.PI*2,false)
+     cg.ctx.fillStyle = '#fff'
+     cg.ctx.closePath()
+     cg.ctx.fill()
+   }
+ }
