@@ -267,6 +267,12 @@ var cg = {
      w = this.ctx.measureText(t = 'created by').width
      this.ctx.fillText(t, (this.config.width - w)/2, cg.config.height / 2 + 180)
 
+    if( SoundMixer.ddPlus === true ){
+        this.dolbyLogo = new Image()
+        this.dolbyLogo.src = 'assets/images/DolbyLogo.png'
+        this.ctx.drawImage(this.dolbyLogo, (cg.config.width / 2 ) + -25 , ( cg.config.height / 2 ) + 300 , 50, 50)
+    }
+
      this.z = new Image()
      this.z.src = 'assets/images/zazub.png'
 
@@ -417,10 +423,6 @@ var Player = function() {
       if( this.ddPlus === true ){
         
         this.extension = '_Dolby.mp4';
-
-        this.dolbyLogo = new Image()
-        this.dolbyLogo.src = 'assets/images/DolbyLogo.png'
-        cg.ctx.drawImage(this.dolbyLogo, (cg.config.width / 2 ) + 120 , ( cg.config.height / 2 ) + 300 , 50, 50)
 
       }
 
